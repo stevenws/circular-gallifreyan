@@ -58,13 +58,55 @@ BorderSymbol.prototype.draw = function(context,
         case BorderSymbol.CType.EDGE:
             var a  = BorderSymbol.EdgeAngle / 2;
             var o  = this.pos;
-            var d  = majorRadius - this.radius * Math.cos(a);
+            var g  = Math.PI - a;
+            var d  = this.radius * Math.cos(g) +
+                     Math.sqrt(majorRadius*majorRadius -
+                               Math.pow(this.radius*Math.sin(g),2));
             var cx = d * Math.sin(o) +
                      majorCentre.x;
             var cy = d * Math.cos(o) +
                      majorCentre.y;
             context.beginPath();
             context.arc(cx, cy, this.radius, 0.5*Math.PI - o + a, 0.5*Math.PI - o - a, false);
+            context.stroke();
+            break;
+        case BorderSymbol.CType.INNER:
+            var d = majorRadius -
+                    this.radius -
+                    BorderSymbol.InnerGap;
+            var cx = d * Math.sin(this.pos) +
+                     majorCentre.x;
+            var cy = d * Math.cos(this.pos) +
+                     majorCentre.y;
+
+            context.beginPath();
+            context.arc(cx, cy, this.radius, 0, 2*Math.PI, true);
+            context.stroke();
+            break;
+        case BorderSymbol.CType.HALF:
+            var a  = Math.PI / 2;
+            var o  = this.pos;
+            var g  = Math.PI - a;
+            var d  = this.radius * Math.cos(g) +
+                     Math.sqrt(majorRadius*majorRadius -
+                               Math.pow(this.radius*Math.sin(g),2));
+            var cx = d * Math.sin(o) +
+                     majorCentre.x;
+            var cy = d * Math.cos(o) +
+                     majorCentre.y;
+            context.beginPath();
+            context.arc(cx, cy, this.radius, 0.5*Math.PI - o + a, 0.5*Math.PI - o - a, false);
+            context.stroke();
+            break;
+        case BorderSymbol.CType.ON:
+            var d = majorRadius;
+            var cx = d * Math.sin(this.pos) +
+                     majorCentre.x;
+            var cy = d * Math.cos(this.pos) +
+                     majorCentre.y;
+
+            context.beginPath();
+            context.arc(cx, cy, this.radius, 0, 2*Math.PI, true);
             context.stroke();
             break;
     }
@@ -96,6 +138,7 @@ BorderSymbol.prototype.getVBType = function()
 };
 
 BorderSymbol.EdgeAngle = 0.5*Math.PI;
+BorderSymbol.InnerGap  = 3;
 
 BorderSymbol.CType = {
     EDGE:  1,

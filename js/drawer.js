@@ -5,8 +5,16 @@ var Drawer = {
     },
     draw: function(pos)
     {
-        var bs = BorderSymbol.create("b", "a", pos);
-        context = Drawer.getCanvas().getContext('2d');
+        var bs      = BorderSymbol.create("y", "a", pos);
+        var canvas  = Drawer.getCanvas();
+        var context = canvas.getContext('2d');
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        context.beginPath();
+        context.arc(200, 200, 100, 0, 2*Math.PI, true);
+        context.stroke();
+
         bs.draw(context, {x:200,y:200}, 100);
     }
 };
