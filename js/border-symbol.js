@@ -23,29 +23,47 @@ BorderSymbol.prototype.barLengths = [];
 
 BorderSymbol.create = function(consonant, vowel, pos)
 {
-    if (!(consonant in BorderSymbol.__consonantLookup__))
-    {
-        throw "BorderSymbol.create: Unknown consonant '" +
-              consonant +
-              "'";
-    }
+    var c  = null;
+    var d  = null;
+    var b  = null;
+    var vc = null;
+    var vb = null;
 
-    if (!(vowel in BorderSymbol.__vowelLookup__))
+    if (consonant)
     {
-        throw "BorderSymbol.create: Unknown vowel '" +
-              vowel +
-              "'";
-    }
+        if (!(consonant in BorderSymbol.__consonantLookup__))
+        {
+            throw "BorderSymbol.create: Unknown consonant '" +
+                  consonant +
+                  "'";
+        }
 
-    var con = BorderSymbol.__consonantLookup__[consonant];
-    var vow = BorderSymbol.__vowelLookup__[vowel];
+        var con = BorderSymbol.__consonantLookup__[consonant];
+        c = con.getCType();
+        d = con.getDType();
+        b = con.getBType();
+    }
+    if (vowel)
+    {
+        if (!(vowel in BorderSymbol.__vowelLookup__))
+        {
+            throw "BorderSymbol.create: Unknown vowel '" +
+                  vowel +
+                  "'";
+        }
+
+        var vow = BorderSymbol.__vowelLookup__[vowel];
+        vc = vow.getVCType();
+        vb = vow.getVBType();
+    }
+        
     return new BorderSymbol(consonant,
                             vowel,
-                            con.getCType(),
-                            con.getDType(),
-                            con.getBType(),
-                            vow.getVCType(),
-                            vow.getVBType(),
+                            c,
+                            d,
+                            b,
+                            vc,
+                            vb,
                             pos);
 };
 

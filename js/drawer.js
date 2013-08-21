@@ -3,9 +3,8 @@ var Drawer = {
     {
         return document.getElementById("output");
     },
-    draw: function(pos)
+    draw: function(cs)
     {
-        var bs      = BorderSymbol.create("y", "a", pos);
         var canvas  = Drawer.getCanvas();
         var context = canvas.getContext('2d');
 
@@ -15,6 +14,9 @@ var Drawer = {
         context.arc(200, 200, 100, 0, 2*Math.PI, true);
         context.stroke();
 
-        bs.draw(context, {x:200,y:200}, 100);
+        for (var i = 0; i < cs.length; i++)
+        {
+            cs[i].draw(context, {x:200,y:200}, 100);
+        }
     }
 };
