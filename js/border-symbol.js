@@ -130,6 +130,25 @@ BorderSymbol.prototype.draw = function(context,
     }
 };
 
+BorderSymbol.prototype.getBlankArc = function(majorRadius)
+{
+    switch(this.getCType())
+    {
+        case BorderSymbol.CType.EDGE:
+            var a = BorderSymbol.EdgeAngle / 2;
+            var g = Math.asin(this.radius*Math.sin(a)/majorRadius);
+            return [0.5*Math.PI - this.pos + g,
+                    0.5*Math.PI - this.pos - g];
+            break;
+        case BorderSymbol.CType.HALF:
+            var a = Math.PI / 2;
+            var g = Math.asin(this.radius*Math.sin(a)/majorRadius);
+            return [0.5*Math.PI - this.pos + g,
+                    0.5*Math.PI - this.pos - g];
+    }
+    return null;
+};
+
 BorderSymbol.prototype.getCType = function()
 {
     return this.__cType__;
