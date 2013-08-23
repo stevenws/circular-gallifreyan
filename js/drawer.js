@@ -15,12 +15,38 @@ var Drawer = {
 
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        for (var i = 0; i < cs.length; i++)
+        var da = 2*Math.PI / cs.length;
+        for (var i = 0, t = 0.5*Math.PI;
+             i < cs.length;
+             i++, t -= da)
         {
+            var s = cs[i];
+            s.pos = t;
+
+            var bType = s.getBType();
+            s.barAngles = [];
+            s.barLengths = [];
+            if (bType > 0)
+            {
+                s.barAngles.push(s.pos + Math.PI);
+                s.barLengths.push(10);
+            }
+            if (bType > 1)
+            {
+                s.barAngles.push(s.pos + Math.PI - 1);
+                s.barLengths.push(10);
+            }
+            if (bType > 2)
+            {
+                s.barAngles.push(s.pos + Math.PI + 1);
+                s.barLengths.push(10);
+            }
+
             cs[i].draw(context, centre, radius);
             var b = cs[i].getBlankArc(radius);
             if (b)
                 blanks.push(b);
+            
         }
 
         if (blanks.length)
@@ -31,8 +57,8 @@ var Drawer = {
                 context.arc(centre.x,
                             centre.y,
                             radius,
-                            blanks[i-1][1],
-                            blanks[i][0],
+                            blanks[i-1][0],
+                            blanks[i][1],
                             true);
                 context.stroke();
             }
@@ -40,8 +66,8 @@ var Drawer = {
             context.arc(centre.x,
                         centre.y,
                         radius,
-                        blanks[blanks.length-1][1],
-                        blanks[0][0],
+                        blanks[blanks.length-1][0],
+                        blanks[0][1],
                         true);
             context.stroke();
         }

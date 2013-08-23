@@ -65,11 +65,5 @@ String.prototype.toCGString = function()
         cs.push(BorderSymbol.create(l, v, 0));
     }
 
-    var da = 2*Math.PI / cs.length;
-    for (var i = 0, t = 0; i < cs.length; i++, t += da)
-    {
-        cs[i].pos = t;
-    }
-
     return cs;
 }
