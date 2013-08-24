@@ -19,9 +19,11 @@ function BorderSymbol(consonant,
 
 BorderSymbol.prototype.radius      = 30;
 BorderSymbol.prototype.vowelRadius = 5;
+BorderSymbol.prototype.dotRadius   = 3;
 BorderSymbol.prototype.vowelGap    = 8;
-BorderSymbol.prototype.barAngles  = [];
-BorderSymbol.prototype.barLengths = [];
+BorderSymbol.prototype.barAngles   = [];
+BorderSymbol.prototype.barLengths  = [];
+BorderSymbol.prototype.dotAngles   = [];
 
 BorderSymbol.create = function(consonant, vowel, pos)
 {
@@ -157,6 +159,19 @@ BorderSymbol.prototype.draw = function(context,
         context.stroke();
     }
 
+    for (var i = 0; i < this.dotAngles.length; i++)
+    {
+        var a = this.dotAngles[i];
+
+        var r = this.radius - BorderSymbol.InnerGap - this.dotRadius;
+        var x = cx + r * Math.cos(a);
+        var y = cy + r * Math.sin(a);
+
+        context.beginPath();
+        context.arc(x, y, this.dotRadius, 0, 2*Math.PI, true);
+        context.fill();
+    }
+
     var vc = this.getVCType();
     if (vc)
     {
@@ -203,6 +218,33 @@ BorderSymbol.prototype.draw = function(context,
         context.beginPath();
         context.arc(cx, cy, this.vowelRadius, 0, 2*Math.PI, true);
         context.stroke();
+    }
+
+    var vb = this.getVBType();
+    switch (vb)
+    {
+        case BorderSymbol.VBType.IN:
+            var a;
+            if (this.barAngles.length > 0)
+            {
+                a = this.barAngles[0];
+            }
+            else
+            {
+                a = this.pos + Math.PI;
+            }
+
+            var sx = cx + this.vowelRadius * Math.cos(a);
+            var sy = cy + this.vowelRadius * Math.sin(a);
+
+            var ex = cx + this.radius * Math.cos(a);
+            var ey = cy + this.radius * Math.sin(a);
+
+            context.beginPath();
+            context.moveTo(sx, sy);
+            context.lineTo(ex, ey);
+            context.stroke();
+            break;
     }
 };
 
