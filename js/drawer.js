@@ -78,6 +78,7 @@ var Drawer = {
                     {
                         continue;
                     }
+
                     var s1 = cs[k];
                     var s2 = cs[k+1];
                     var c1 = s1.getCentre(centre, radius);
@@ -86,38 +87,34 @@ var Drawer = {
                     var mx = (c1.x + c2.x)/2;
                     var my = (c1.y + c2.y)/2;
 
-                    var d1 = Math.sqrt(Math.pow(c1.x - c0.x, 2) +
-                                       Math.pow(c1.y - c0.y, 2));
-                    var d2 = Math.sqrt(Math.pow(c2.x - c0.x, 2) +
-                                       Math.pow(c2.y - c0.y, 2));
-                    var d3 = Math.sqrt(Math.pow(mx - c0.x, 2) +
-                                       Math.pow(my - c0.y, 2));
-                    var d  = Math.sqrt(Math.pow(c1.x - c2.x, 2) +
-                                       Math.pow(c1.y - c2.y, 2));
+                    var d0m = Math.sqrt(Math.pow(mx - c0.x, 2) +
+                                        Math.pow(my - c0.y, 2));
+                    var d02 = Math.sqrt(Math.pow(c2.x - c0.x, 2) +
+                                        Math.pow(c2.y - c0.y, 2));
+                    var dm2 = Math.sqrt(Math.pow(c2.x - mx, 2) +
+                                        Math.pow(c2.y - my, 2));
+                    var ds = (d0m+d02+dm2)/2;
+                    var A  = Math.sqrt(ds*(ds-d0m)*(ds-d02)*(ds-dm2));
+                    var h  = 2*A/d0m;
 
-                    var cosg = -(d*d/4 - d3*d3 - d2*d2)/(2*d3*d2);
-                    
-                    if (d2*Math.sin(Math.acos(cosg)) > s1.radius)
+                    if (h > s1.radius)
                     {
-console.log([mx, my, i, k, cosg, d2*Math.sin(Math.acos(cosg))]);
-context.beginPath();
-context.arc(mx, my, 3, 0, 2*Math.PI, true);
-context.fill();
+                        s.barEdgeCons[k] = true;
 
-                        var dx = centre.x - c0.x;
-                        var dy = centre.y - c0.y;
+                        var dx = mx - c0.x;
+                        var dy = my - c0.y;
+                        var a  = Math.atan(dy/dx) +
+                                 (dx < 0) * Math.PI;
 
-                        var d = Math.sqrt(dx*dx + dy*dy);
-                        var g = Math.atan((my - c0.y)/(mx - c0.x));
-                        var o = g + Math.PI + s.pos;
-                        var l = d * Math.cos(g) +
-                            Math.sqrt(radius*radius -
-                                    Math.pow(d * Math.sin(g), 2)) - 
-                            s.radius;
-                        s.barAngles.push(o);
+                        var g = a - Math.PI - s.pos;
+                        var d = Math.sqrt(Math.pow(centre.x - c0.x, 2) +
+                                          Math.pow(centre.y - c0.y, 2));
+                        var l = d * Math.cos(g) - s.radius +
+                                Math.sqrt(radius*radius -
+                                          Math.pow(d*Math.sin(g), 2));
+                        s.barAngles.push(a);
                         s.barLengths.push(l);
 
-                        s.barEdgeCons[k] = true;
                         continue barLoop;
                     }
                 }
@@ -141,19 +138,6 @@ context.fill();
                 {
                     break barLoop;
                 }
-
-                var dx = centre.x - c0.x;
-                var dy = centre.y - c0.y;
-
-                var d = Math.sqrt(dx*dx + dy*dy);
-                var g = Math.atan((ny - c0.y)/(nx - c0.x));
-                var o = g + Math.PI + s.pos;
-                var l = d * Math.cos(g) +
-                    Math.sqrt(radius*radius -
-                            Math.pow(d * Math.sin(g), 2)) - 
-                    s.radius;
-                s.barAngles.push(o);
-                s.barLengths.push(l);
             }
 
             var dType = s.getDType();
