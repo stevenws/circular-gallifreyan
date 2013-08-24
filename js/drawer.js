@@ -23,22 +23,48 @@ var Drawer = {
             var s = cs[i];
             s.pos = t;
 
-            var bType = s.getBType();
-            s.barAngles = [];
+            s.barAngles  = [];
             s.barLengths = [];
-            if (bType > 0)
+        }
+
+        for (var i = 0; i < cs.length; i++)
+        {
+            var s = cs[i];
+            var initJ = s.barAngles.length;
+
+            var bType = s.getBType();
+            for (var j = initJ; j < s.getBType(); j++)
             {
-                s.barAngles.push(s.pos + Math.PI);
-                s.barLengths.push(10);
+                for (var k = i + j + 1 - initJ; k < cs.length; k++)
+                {
+                    if (cs[k].getBType() > cs[k].barAngles.length)
+                    {
+                        var c1 = s.getCentre(centre, radius);
+                        var c2 = cs[k].getCentre(centre, radius);
+                        var dx = c2.x - c1.x;
+                        var dy = c2.y - c1.y;
+                        var a  = Math.atan(dy/dx) +
+                                 (dx < 0) * Math.PI;
+
+                        var l  = Math.sqrt(dx*dx + dy*dy) -
+                                 s.radius -
+                                 cs[k].radius;
+
+                        s.barAngles.push(a);
+                        s.barLengths.push(l);
+                        cs[k].barAngles.push(Math.PI + a);
+                        cs[k].barLengths.push(0);
+                        break;
+                    }
+                }
+                if (k == cs.length)
+                {
+                    break;
+                }
             }
-            if (bType > 1)
+            for (var j = s.barAngles.length; j < s.getBType(); j++)
             {
-                s.barAngles.push(s.pos + Math.PI - 1);
-                s.barLengths.push(10);
-            }
-            if (bType > 2)
-            {
-                s.barAngles.push(s.pos + Math.PI + 1);
+                s.barAngles.push(Math.PI + s.pos + [0, -1, 1][j]);
                 s.barLengths.push(10);
             }
 

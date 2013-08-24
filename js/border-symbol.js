@@ -71,68 +71,46 @@ BorderSymbol.create = function(consonant, vowel, pos)
                             pos);
 };
 
-BorderSymbol.prototype.draw = function(context,
-                                       majorCentre,
-                                       majorRadius)
+BorderSymbol.prototype.getCentre = function(majorCentre,
+                                            majorRadius)
 {
     var cx, cy;
     var d;
+    var o = this.pos;
     switch (this.getCType())
     {
         case BorderSymbol.CType.EDGE:
             var a  = BorderSymbol.EdgeAngle / 2;
-            var o  = this.pos;
             var g  = Math.PI - a;
             d  = this.radius * Math.cos(g) +
-                     Math.sqrt(majorRadius*majorRadius -
-                               Math.pow(this.radius*Math.sin(g),2));
+                 Math.sqrt(majorRadius*majorRadius -
+                           Math.pow(this.radius*Math.sin(g),2));
             cx = d * Math.cos(o) +
                  majorCentre.x;
             cy = d * Math.sin(o) +
                  majorCentre.y;
-            context.beginPath();
-            context.arc(cx, cy, this.radius, o + a, o - a, false);
-            context.stroke();
             break;
         case BorderSymbol.CType.INNER:
             d = majorRadius -
-                    this.radius -
-                    BorderSymbol.InnerGap;
+                this.radius -
+                BorderSymbol.InnerGap;
             cx = d * Math.cos(this.pos) +
                      majorCentre.x;
             cy = d * Math.sin(this.pos) +
                      majorCentre.y;
-
-            context.beginPath();
-            context.arc(cx, cy, this.radius, 0, 2*Math.PI, true);
-            context.stroke();
             break;
         case BorderSymbol.CType.HALF:
             var a  = Math.PI / 2;
-            var o  = this.pos;
             var g  = Math.PI - a;
             d  = this.radius * Math.cos(g) +
-                     Math.sqrt(majorRadius*majorRadius -
-                               Math.pow(this.radius*Math.sin(g),2));
+                 Math.sqrt(majorRadius*majorRadius -
+                           Math.pow(this.radius*Math.sin(g),2));
             cx = d * Math.cos(o) +
                      majorCentre.x;
             cy = d * Math.sin(o) +
                      majorCentre.y;
-            context.beginPath();
-            context.arc(cx, cy, this.radius, o + a, o - a, false);
-            context.stroke();
             break;
         case BorderSymbol.CType.ON:
-            d = majorRadius;
-            cx = d * Math.cos(this.pos) +
-                     majorCentre.x;
-            cy = d * Math.sin(this.pos) +
-                     majorCentre.y;
-
-            context.beginPath();
-            context.arc(cx, cy, this.radius, 0, 2*Math.PI, true);
-            context.stroke();
-            break;
         default:
             d = majorRadius;
             cx = d * Math.cos(this.pos) +
@@ -141,6 +119,46 @@ BorderSymbol.prototype.draw = function(context,
                      majorCentre.y;
             break;
     }
+
+    return {x: cx, y: cy};
+};
+
+BorderSymbol.prototype.draw = function(context,
+                                       majorCentre,
+                                       majorRadius)
+{
+    var c  = this.getCentre(majorCentre,
+                            majorRadius);
+    var cx = c.x;
+    var cy = c.y;
+
+    context.beginPath();
+    switch (this.getCType())
+    {
+        case BorderSymbol.CType.EDGE:
+            var a  = BorderSymbol.EdgeAngle / 2;
+            context.arc(cx,
+                        cy,
+                        this.radius,
+                        this.pos + a,
+                        this.pos - a,
+                        false);
+            break;
+        case BorderSymbol.CType.HALF:
+            var a = Math.PI / 2;
+            context.arc(cx,
+                        cy,
+                        this.radius,
+                        this.pos + a,
+                        this.pos - a,
+                        false);
+            break;
+        case BorderSymbol.CType.INNER:
+        case BorderSymbol.CType.ON:
+            context.arc(cx, cy, this.radius, 0, 2*Math.PI, true);
+            break;
+    }
+    context.stroke();
 
     for (var i = 0; i < this.barAngles.length; i++)
     {
@@ -239,6 +257,22 @@ BorderSymbol.prototype.draw = function(context,
 
             var ex = cx + this.radius * Math.cos(a);
             var ey = cy + this.radius * Math.sin(a);
+
+            context.beginPath();
+            context.moveTo(sx, sy);
+            context.lineTo(ex, ey);
+            context.stroke();
+            break;
+        case BorderSymbol.VBType.OUT:
+            a = this.pos;
+
+            var sx = cx + this.vowelRadius * Math.cos(a);
+            var sy = cy + this.vowelRadius * Math.sin(a);
+
+            var ex = cx +
+                     (this.radius + this.vowelRadius) * Math.cos(a);
+            var ey = cy +
+                     (this.radius + this.vowelRadius*2) * Math.sin(a);
 
             context.beginPath();
             context.moveTo(sx, sy);
