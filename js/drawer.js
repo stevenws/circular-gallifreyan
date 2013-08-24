@@ -64,8 +64,19 @@ var Drawer = {
             }
             for (var j = s.barAngles.length; j < s.getBType(); j++)
             {
-                s.barAngles.push(Math.PI + s.pos + [0, -1, 1][j]);
-                s.barLengths.push(10);
+                var c = s.getCentre(centre, radius);
+                var dx = centre.x - c.x;
+                var dy = centre.y - c.y;
+
+                var d = Math.sqrt(dx*dx + dy*dy);
+                var g = [0, -1, 1][j];
+                var o = g + Math.PI + s.pos;
+                var l = d * Math.cos(g) +
+                        Math.sqrt(radius*radius -
+                                  Math.pow(d * Math.sin(g), 2)) - 
+                        s.radius;
+                s.barAngles.push(o);
+                s.barLengths.push(l);
             }
 
             var dType = s.getDType();
