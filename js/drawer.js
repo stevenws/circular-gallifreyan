@@ -123,14 +123,14 @@ var Drawer = {
                 if (!(i in s.barEdgeCons))
                 {
                     s.barEdgeCons[i] = true;
-                    var ep = this.pos - da/2;
+                    var ep = s.pos - da/2;
                     nx = centre.x + radius * Math.cos(ep);
                     ny = centre.y + radius * Math.sin(ep);
                 }
                 else if (!(iPrev in s.barEdgeCons))
                 {
                     s.barEdgeCons[iPrev] = true;
-                    var ep = this.pos + da/2;
+                    var ep = s.pos + da/2;
                     nx = centre.x + radius * Math.cos(ep);
                     ny = centre.y + radius * Math.sin(ep);
                 }
@@ -138,6 +138,20 @@ var Drawer = {
                 {
                     break barLoop;
                 }
+
+                var dx = nx - c0.x;
+                var dy = ny - c0.y;
+                var a  = Math.atan(dy/dx) +
+                         (dx < 0) * Math.PI;
+
+                var g = a - Math.PI - s.pos;
+                var d = Math.sqrt(Math.pow(centre.x - c0.x, 2) +
+                                  Math.pow(centre.y - c0.y, 2));
+                var l = d * Math.cos(g) - s.radius +
+                        Math.sqrt(radius*radius -
+                                  Math.pow(d*Math.sin(g), 2));
+                s.barAngles.push(a);
+                s.barLengths.push(l);
             }
 
             var dType = s.getDType();
