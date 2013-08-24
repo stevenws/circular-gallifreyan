@@ -24,6 +24,7 @@ BorderSymbol.prototype.vowelGap    = 8;
 BorderSymbol.prototype.barAngles   = [];
 BorderSymbol.prototype.barLengths  = [];
 BorderSymbol.prototype.dotAngles   = [];
+BorderSymbol.prototype.barEdgeCons = [];
 
 BorderSymbol.create = function(consonant, vowel, pos)
 {
