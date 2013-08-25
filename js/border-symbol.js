@@ -18,13 +18,28 @@ function BorderSymbol(consonant,
 }
 
 BorderSymbol.prototype.radius      = 30;
-BorderSymbol.prototype.vowelRadius = 5;
-BorderSymbol.prototype.dotRadius   = 3;
-BorderSymbol.prototype.vowelGap    = 8;
+BorderSymbol.prototype.vowelRadius = 0.17;
+BorderSymbol.prototype.dotRadius   = 0.1;
+BorderSymbol.prototype.vowelGap    = 0.27;
 BorderSymbol.prototype.barAngles   = [];
 BorderSymbol.prototype.barLengths  = [];
 BorderSymbol.prototype.dotAngles   = [];
 BorderSymbol.prototype.barEdgeCons = [];
+
+BorderSymbol.prototype.getVowelRadius = function()
+{
+    return this.radius*this.vowelRadius;
+}
+
+BorderSymbol.prototype.getDotRadius = function()
+{
+    return this.radius*this.dotRadius;
+}
+
+BorderSymbol.prototype.getVowelGap = function()
+{
+    return this.radius*this.vowelGap;
+}
 
 BorderSymbol.create = function(consonant, vowel, pos)
 {
@@ -94,7 +109,7 @@ BorderSymbol.prototype.getCentre = function(majorCentre,
         case BorderSymbol.CType.INNER:
             d = majorRadius -
                 this.radius -
-                BorderSymbol.InnerGap;
+                this.getInnerGap();
             cx = d * Math.cos(this.pos) +
                      majorCentre.x;
             cy = d * Math.sin(this.pos) +
@@ -186,7 +201,7 @@ BorderSymbol.prototype.draw = function(context,
         switch (vc)
         {
             case BorderSymbol.VCType.IN:
-                var D = majorRadius + this.vowelGap;
+                var D = majorRadius + this.getVowelGap();
                 vx = D * Math.cos(this.pos) +
                          majorCentre.x;
                 vy = D * Math.sin(this.pos) +
@@ -204,8 +219,8 @@ BorderSymbol.prototype.draw = function(context,
                 if (this.getCType() === null)
                 {
                     var drawRad = majorRadius -
-                                  BorderSymbol.InnerGap -
-                                  this.vowelRadius;
+                                  this.getInnerGap() -
+                                  this.getVowelRadius();
                     vx = drawRad * Math.cos(this.pos) + majorCentre.x;
                     vy = drawRad * Math.sin(this.pos) + majorCentre.y;
                 }
@@ -243,7 +258,7 @@ BorderSymbol.prototype.draw = function(context,
                 break;
         }
         context.beginPath();
-        context.arc(vx, vy, this.vowelRadius, 0, 2*Math.PI, true);
+        context.arc(vx, vy, this.getVowelRadius(), 0, 2*Math.PI, true);
         context.stroke();
     }
 
@@ -281,12 +296,12 @@ BorderSymbol.prototype.draw = function(context,
     {
         var a = this.dotAngles[i];
 
-        var r = this.radius - BorderSymbol.InnerGap - this.dotRadius;
+        var r = this.radius - this.getInnerGap() - this.getDotRadius();
         var x = cx + r * Math.cos(a);
         var y = cy + r * Math.sin(a);
 
         context.beginPath();
-        context.arc(x, y, this.dotRadius, 0, 2*Math.PI, true);
+        context.arc(x, y, this.getDotRadius(), 0, 2*Math.PI, true);
         context.fill();
     }
 
@@ -304,8 +319,8 @@ BorderSymbol.prototype.draw = function(context,
                 a = this.pos + Math.PI;
             }
 
-            var sx = cx + this.vowelRadius * Math.cos(a);
-            var sy = cy + this.vowelRadius * Math.sin(a);
+            var sx = cx + this.getVowelRadius() * Math.cos(a);
+            var sy = cy + this.getVowelRadius() * Math.sin(a);
 
             var ex = cx + this.radius * Math.cos(a);
             var ey = cy + this.radius * Math.sin(a);
@@ -318,13 +333,15 @@ BorderSymbol.prototype.draw = function(context,
         case BorderSymbol.VBType.OUT:
             a = this.pos;
 
-            var sx = cx + this.vowelRadius * Math.cos(a);
-            var sy = cy + this.vowelRadius * Math.sin(a);
+            var sx = cx + this.getVowelRadius() * Math.cos(a);
+            var sy = cy + this.getVowelRadius() * Math.sin(a);
 
             var ex = cx +
-                     (this.radius + this.vowelRadius) * Math.cos(a);
+                     (this.radius + this.getVowelRadius()) *
+                     Math.cos(a);
             var ey = cy +
-                     (this.radius + this.vowelRadius*2) * Math.sin(a);
+                     (this.radius + this.getVowelRadius()*2) *
+                     Math.sin(a);
 
             context.beginPath();
             context.moveTo(sx, sy);
@@ -379,7 +396,12 @@ BorderSymbol.prototype.getVBType = function()
 };
 
 BorderSymbol.EdgeAngle = 0.5*Math.PI;
-BorderSymbol.InnerGap  = 3;
+BorderSymbol.InnerGap  = 0.1;
+
+BorderSymbol.prototype.getInnerGap = function()
+{
+    return this.radius*BorderSymbol.InnerGap;
+}
 
 BorderSymbol.CType = {
     EDGE:  1,
