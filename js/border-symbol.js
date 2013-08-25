@@ -227,6 +227,44 @@ BorderSymbol.prototype.draw = function(context,
                     vx = drawRad * Math.cos(this.pos) + majorCentre.x;
                     vy = drawRad * Math.sin(this.pos) + majorCentre.y;
                 }
+                else if (this.barAngles.length > 0)
+                {
+                    var nPos = this.pos;
+                    while (nPos < 0)
+                    {
+                        nPos += 2*Math.PI;
+                    }
+                    while (nPos >= 2*Math.PI)
+                    {
+                        nPos -= 2*Math.PI;
+                    }
+
+                    var min = nPos + 2*Math.PI;
+                    var max = nPos;
+                    for (var i = 0; i < this.barAngles.length; i++)
+                    {
+                        var a = this.barAngles[i];
+                        while (a < nPos)
+                        {
+                            a += 2*Math.PI;
+                        }
+                        while (a >= nPos + 2*Math.PI)
+                        {
+                            a -= 2*Math.PI;
+                        }
+                        if (a < min) {min = a;}
+                        if (a > max) {max = a;}
+                    }
+
+                    var aMin = nPos + 0.5*Math.PI;
+                    var aMax = nPos - 0.5*Math.PI;
+                    var a = min - aMin > aMax - max ?
+                                (min + aMin) / 2 :
+                                (max + aMax) / 2;
+
+                    vx = cx + this.radius * Math.cos(a);
+                    vy = cy + this.radius * Math.sin(a);
+                }
                 else if (Math.abs(cx - majorCentre.x) >
                          Math.abs(cy - majorCentre.y))
                 {
