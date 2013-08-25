@@ -208,7 +208,6 @@ BorderSymbol.prototype.draw = function(context,
                          majorCentre.x;
                 vy = D * Math.sin(this.pos) +
                          majorCentre.y;
-                vcPos = this.pos;
                 break;
             case BorderSymbol.VCType.CENTRE:
                 vx = cx;
