@@ -7,8 +7,7 @@ CanvasSetup = {
     }
 }
 
-window.onload   = CanvasSetup.setupCanvas;
-window.onresize = function()
+window.onload = window.onresize = function()
 {
     CanvasSetup.setupCanvas();
     Input.changeHandler();

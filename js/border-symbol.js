@@ -180,11 +180,13 @@ BorderSymbol.prototype.draw = function(context,
 
     for (var i = 0; i < this.barAngles.length; i++)
     {
+        var r = this.getCType() === null ? this.getVowelRadius() :
+                                           this.radius;
         var a = this.barAngles[i];
         var l = this.barLengths[i];
 
-        var sx = cx + this.radius * Math.cos(a);
-        var sy = cy + this.radius * Math.sin(a);
+        var sx = cx + r * Math.cos(a);
+        var sy = cy + r * Math.sin(a);
 
         var ex = sx + l * Math.cos(a);
         var ey = sy + l * Math.sin(a);

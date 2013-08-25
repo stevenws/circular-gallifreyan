@@ -95,9 +95,10 @@ WordSymbol.prototype.addBarInGap = function(i, isVowel)
     var s      = cs[i];
     var centre = {x: 0, y: 0};
     var radius = this.getRadius();
+    var da = 2*Math.PI / cs.length;
 
     barLoop:for (var j = s.barAngles.length;
-                 j < s.getBType();
+                 j < (isVowel ? 1 : s.getBType());
                  j++)
     {
         var c0 = s.getCentre(centre, radius);
@@ -105,15 +106,19 @@ WordSymbol.prototype.addBarInGap = function(i, isVowel)
         if (iPrev < 0)
             iPrev += cs.length;
 
-        for (var k = 0; k < cs.length - 1; k++)
+        for (var k = 0; k < cs.length; k++)
         {
+            var kNext = k + 1;
+            if (kNext >= cs.length)
+                kNext -= cs.length;
+
             if (k == i || k == iPrev || k in s.barEdgeCons)
             {
                 continue;
             }
 
             var s1 = cs[k];
-            var s2 = cs[k+1];
+            var s2 = cs[kNext];
             var c1 = s1.getCentre(centre, radius);
             var c2 = s2.getCentre(centre, radius);
 
@@ -142,9 +147,10 @@ WordSymbol.prototype.addBarInGap = function(i, isVowel)
                 var g = a - Math.PI - s.pos;
                 var d = Math.sqrt(Math.pow(centre.x - c0.x, 2) +
                                   Math.pow(centre.y - c0.y, 2));
-                var l = d * Math.cos(g) - s.radius +
+                var l = d * Math.cos(g) +
                         Math.sqrt(radius*radius -
-                                  Math.pow(d*Math.sin(g), 2));
+                                  Math.pow(d*Math.sin(g), 2)) -
+                        (isVowel ? s.getVowelRadius() : s.radius);
                 s.barAngles.push(a);
                 s.barLengths.push(l);
 
@@ -182,9 +188,10 @@ WordSymbol.prototype.addBarInGap = function(i, isVowel)
         var g = a - Math.PI - s.pos;
         var d = Math.sqrt(Math.pow(centre.x - c0.x, 2) +
                           Math.pow(centre.y - c0.y, 2));
-        var l = d * Math.cos(g) - s.radius +
+        var l = d * Math.cos(g) +
                 Math.sqrt(radius*radius -
-                          Math.pow(d*Math.sin(g), 2));
+                          Math.pow(d*Math.sin(g), 2)) - 
+                (isVowel ? s.getVowelRadius() : s.radius);
         s.barAngles.push(a);
         s.barLengths.push(l);
     }
@@ -213,7 +220,9 @@ WordSymbol.prototype.setup = function()
     {
         var s = cs[i];
 
-        /* Allow "i" to have a normal bar if on its own */
+        /* Allow "i" to have a normal bar if on its own ie. not on
+         * a consonent.
+         */
         if (s.getCType() === null &&
             s.getVBType() === BorderSymbol.VBType.IN)
         {
@@ -232,7 +241,7 @@ WordSymbol.prototype.setup = function()
                              (dx < 0) * Math.PI;
 
                     var l  = Math.sqrt(dx*dx + dy*dy) -
-                             s.vowelRadius -
+                             s.getVowelRadius() -
                              cs[k].radius;
 
                     s.barAngles.push(a);
@@ -244,7 +253,7 @@ WordSymbol.prototype.setup = function()
             }
             if (k == cs.length)
             {
-                this.addBarInGap(i);
+                this.addBarInGap(i, true);
             }
         }
 
@@ -278,7 +287,7 @@ WordSymbol.prototype.setup = function()
             }
             if (k == cs.length)
             {
-                this.addBarInGap(i);
+                this.addBarInGap(i, false);
                 break;
             }
         }
