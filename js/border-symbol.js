@@ -178,6 +178,105 @@ BorderSymbol.prototype.draw = function(context,
         context.stroke();
     }
 
+    var vc = this.getVCType();
+    var vcPos = false;
+    var vx, vy;
+    if (vc)
+    {
+        switch (vc)
+        {
+            case BorderSymbol.VCType.IN:
+                var D = majorRadius + this.vowelGap;
+                vx = D * Math.cos(this.pos) +
+                         majorCentre.x;
+                vy = D * Math.sin(this.pos) +
+                         majorCentre.y;
+                vcPos = this.pos;
+                break;
+            case BorderSymbol.VCType.CENTRE:
+                vx = cx;
+                vy = cy;
+                break;
+            case BorderSymbol.VCType.ON:
+                /* This could be any position on the circle but this is
+                 * simpler for now.
+                 */
+                if (this.getCType() === null)
+                {
+                    var drawRad = majorRadius -
+                                  BorderSymbol.InnerGap -
+                                  this.vowelRadius;
+                    vx = drawRad * Math.cos(this.pos) + majorCentre.x;
+                    vy = drawRad * Math.sin(this.pos) + majorCentre.y;
+                }
+                else if (Math.abs(cx - majorCentre.x) >
+                         Math.abs(cy - majorCentre.y))
+                {
+                    if (cx > majorCentre.x)
+                    {
+                        vx = cx - this.radius;
+                        vy = cy;
+                        vcPos = 0;
+                    }
+                    else
+                    {
+                        vx = cx + this.radius;
+                        vy = cy;
+                        vcPos = Math.PI;
+                    }
+                }
+                else
+                {
+                    if (cy > majorCentre.y)
+                    {
+                        vy = cy - this.radius;
+                        vx = cx;
+                        vcPos = 1.5*Math.PI;
+                    }
+                    else
+                    {
+                        vy = cy + this.radius;
+                        vx = cx;
+                        vcPos = 0.5*Math.PI;
+                    }
+                }
+                break;
+        }
+        context.beginPath();
+        context.arc(vx, vy, this.vowelRadius, 0, 2*Math.PI, true);
+        context.stroke();
+    }
+
+    var dType = this.getDType();
+    this.dotAngles = [];
+    var middlePos;
+    if (vcPos !== false)
+    {
+        middlePos = vcPos + 0.3*Math.PI;
+    }
+
+    else if (this.getVBType() == BorderSymbol.VBType.IN)
+    {
+        middlePos = this.pos + 0.75*Math.PI;
+    }
+    else
+    {
+        middlePos = this.pos + Math.PI;
+    }
+
+    if (dType > 0)
+    {
+        this.dotAngles.push(middlePos);
+    }
+    if (dType > 1)
+    {
+        this.dotAngles.push(middlePos - 0.4);
+    }
+    if (dType > 2)
+    {
+        this.dotAngles.push(middlePos + 0.4);
+    }
+
     for (var i = 0; i < this.dotAngles.length; i++)
     {
         var a = this.dotAngles[i];
@@ -189,54 +288,6 @@ BorderSymbol.prototype.draw = function(context,
         context.beginPath();
         context.arc(x, y, this.dotRadius, 0, 2*Math.PI, true);
         context.fill();
-    }
-
-    var vc = this.getVCType();
-    if (vc)
-    {
-        switch (vc)
-        {
-            case BorderSymbol.VCType.IN:
-                var D = majorRadius + this.vowelGap;
-                cx = D * Math.cos(this.pos) +
-                         majorCentre.x;
-                cy = D * Math.sin(this.pos) +
-                         majorCentre.y;
-                break;
-            case BorderSymbol.VCType.CENTRE:
-                break;
-            case BorderSymbol.VCType.ON:
-                /* This could be any position on the circle but this is
-                 * simpler for now.
-                 */
-                if (Math.abs(cx - majorCentre.x) >
-                    Math.abs(cy - majorCentre.y))
-                {
-                    if (cx > majorCentre.x)
-                    {
-                        cx -= this.radius;
-                    }
-                    else
-                    {
-                        cx += this.radius;
-                    }
-                }
-                else
-                {
-                    if (cy > majorCentre.y)
-                    {
-                        cy -= this.radius;
-                    }
-                    else
-                    {
-                        cy += this.radius;
-                    }
-                }
-                break;
-        }
-        context.beginPath();
-        context.arc(cx, cy, this.vowelRadius, 0, 2*Math.PI, true);
-        context.stroke();
     }
 
     var vb = this.getVBType();

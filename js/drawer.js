@@ -154,21 +154,6 @@ var Drawer = {
                 s.barLengths.push(l);
             }
 
-            var dType = s.getDType();
-            s.dotAngles = [];
-            if (dType > 0)
-            {
-                s.dotAngles.push(s.pos + Math.PI);
-            }
-            if (dType > 1)
-            {
-                s.dotAngles.push(s.pos + Math.PI - 0.4);
-            }
-            if (dType > 2)
-            {
-                s.dotAngles.push(s.pos + Math.PI + 0.4);
-            }
-
             cs[i].draw(context, centre, radius);
             var b = cs[i].getBlankArc(radius);
             if (b)
