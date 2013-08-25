@@ -12,7 +12,7 @@ Input = {
                c == "o" ||
                c == "u";
     },
-    wordGap:  20
+    wordGap:  0.27
 };
 
 String.prototype.toCGString = function()
@@ -48,9 +48,9 @@ String.prototype.toCGString = function()
     counts.push(c);
 
     var canvas     = Drawer.getCanvas();
-    var wordRadius = (Math.min(canvas.width, canvas.height) /
-                      (2*counts.length-1) - Input.wordGap) / 2;
-    var wordDist   = 2 * wordRadius + Input.wordGap;
+    var wordRadius = Math.min(canvas.width, canvas.height) /
+                     (2*counts.length-1) / (2 + Input.wordGap);
+    var wordDist   = (2 + Input.wordGap) * wordRadius;
 
     for (var i = words.length - 1, c = 0, cycle = 0, r = 0;
          i >= 0;

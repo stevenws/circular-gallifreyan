@@ -232,13 +232,13 @@ BorderSymbol.prototype.draw = function(context,
                     {
                         vx = cx - this.radius;
                         vy = cy;
-                        vcPos = 0;
+                        vcPos = Math.PI;
                     }
                     else
                     {
                         vx = cx + this.radius;
                         vy = cy;
-                        vcPos = Math.PI;
+                        vcPos = 0;
                     }
                 }
                 else
@@ -270,7 +270,6 @@ BorderSymbol.prototype.draw = function(context,
     {
         middlePos = vcPos + 0.3*Math.PI;
     }
-
     else if (this.getVBType() == BorderSymbol.VBType.IN)
     {
         middlePos = this.pos + 0.75*Math.PI;
