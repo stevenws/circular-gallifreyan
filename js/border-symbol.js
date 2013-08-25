@@ -5,7 +5,8 @@ function BorderSymbol(consonant,
                       bType,
                       vcType,
                       vbType,
-                      pos)
+                      pos,
+                      radius)
 {
     this.__consonant__ = consonant;
     this.__vowel__     = vowel;
@@ -15,9 +16,9 @@ function BorderSymbol(consonant,
     this.__vcType__    = vcType;
     this.__vbType__    = vbType;
     this.pos           = pos;
+    this.radius        = radius;
 }
 
-BorderSymbol.prototype.radius      = 30;
 BorderSymbol.prototype.vowelRadius = 0.17;
 BorderSymbol.prototype.dotRadius   = 0.1;
 BorderSymbol.prototype.vowelGap    = 0.27;
@@ -41,7 +42,7 @@ BorderSymbol.prototype.getVowelGap = function()
     return this.radius*this.vowelGap;
 }
 
-BorderSymbol.create = function(consonant, vowel, pos)
+BorderSymbol.create = function(consonant, vowel, pos, radius)
 {
     var c  = null;
     var d  = null;
@@ -84,7 +85,8 @@ BorderSymbol.create = function(consonant, vowel, pos)
                             b,
                             vc,
                             vb,
-                            pos);
+                            pos,
+                            radius);
 };
 
 BorderSymbol.prototype.getCentre = function(majorCentre,
@@ -441,7 +443,7 @@ BorderSymbol.__consonantLookup__ = {
         null,
         null,
         null,
-        0),
+        0, 0),
     "ch": new BorderSymbol("",
             "ch",
             BorderSymbol.CType.EDGE,
@@ -449,7 +451,7 @@ BorderSymbol.__consonantLookup__ = {
             null,
             null,
             null,
-            0),
+            0, 0),
     "d": new BorderSymbol("",
             "d",
             BorderSymbol.CType.EDGE,
@@ -457,7 +459,7 @@ BorderSymbol.__consonantLookup__ = {
             null,
             null,
             null,
-            0),
+            0, 0),
     "f": new BorderSymbol("",
             "f",
             BorderSymbol.CType.EDGE,
@@ -465,7 +467,7 @@ BorderSymbol.__consonantLookup__ = {
             BorderSymbol.BType.TRIPLE,
             null,
             null,
-            0),
+            0, 0),
     "g": new BorderSymbol("",
             "g",
             BorderSymbol.CType.EDGE,
@@ -473,7 +475,7 @@ BorderSymbol.__consonantLookup__ = {
             BorderSymbol.BType.SINGLE,
             null,
             null,
-            0),
+            0, 0),
     "h": new BorderSymbol("",
             "h",
             BorderSymbol.CType.EDGE,
@@ -481,7 +483,7 @@ BorderSymbol.__consonantLookup__ = {
             BorderSymbol.BType.DOUBLE,
             null,
             null,
-            0),
+            0, 0),
     "j": new BorderSymbol("",
             "j",
             BorderSymbol.CType.INNER,
@@ -489,7 +491,7 @@ BorderSymbol.__consonantLookup__ = {
             null,
             null,
             null,
-            0),
+            0, 0),
     "k": new BorderSymbol("",
             "k",
             BorderSymbol.CType.INNER,
@@ -497,7 +499,7 @@ BorderSymbol.__consonantLookup__ = {
             null,
             null,
             null,
-            0),
+            0, 0),
     "l": new BorderSymbol("",
             "l",
             BorderSymbol.CType.INNER,
@@ -505,7 +507,7 @@ BorderSymbol.__consonantLookup__ = {
             null,
             null,
             null,
-            0),
+            0, 0),
     "m": new BorderSymbol("",
             "m",
             BorderSymbol.CType.INNER,
@@ -513,7 +515,7 @@ BorderSymbol.__consonantLookup__ = {
             BorderSymbol.BType.TRIPLE,
             null,
             null,
-            0),
+            0, 0),
     "n": new BorderSymbol("",
             "n",
             BorderSymbol.CType.INNER,
@@ -521,7 +523,7 @@ BorderSymbol.__consonantLookup__ = {
             BorderSymbol.BType.SINGLE,
             null,
             null,
-            0),
+            0, 0),
     "p": new BorderSymbol("",
             "p",
             BorderSymbol.CType.INNER,
@@ -529,7 +531,7 @@ BorderSymbol.__consonantLookup__ = {
             BorderSymbol.BType.DOUBLE,
             null,
             null,
-            0),
+            0, 0),
     "t": new BorderSymbol("",
             "t",
             BorderSymbol.CType.HALF,
@@ -537,7 +539,7 @@ BorderSymbol.__consonantLookup__ = {
             null,
             null,
             null,
-            0),
+            0, 0),
     "sh": new BorderSymbol("",
             "sh",
             BorderSymbol.CType.HALF,
@@ -545,7 +547,7 @@ BorderSymbol.__consonantLookup__ = {
             null,
             null,
             null,
-            0),
+            0, 0),
     "r": new BorderSymbol("",
             "r",
             BorderSymbol.CType.HALF,
@@ -553,7 +555,7 @@ BorderSymbol.__consonantLookup__ = {
             null,
             null,
             null,
-            0),
+            0, 0),
     "s": new BorderSymbol("",
             "s",
             BorderSymbol.CType.HALF,
@@ -561,7 +563,7 @@ BorderSymbol.__consonantLookup__ = {
             BorderSymbol.BType.TRIPLE,
             null,
             null,
-            0),
+            0, 0),
     "v": new BorderSymbol("",
             "v",
             BorderSymbol.CType.HALF,
@@ -569,7 +571,7 @@ BorderSymbol.__consonantLookup__ = {
             BorderSymbol.BType.SINGLE,
             null,
             null,
-            0),
+            0, 0),
     "w": new BorderSymbol("",
             "w",
             BorderSymbol.CType.HALF,
@@ -577,7 +579,7 @@ BorderSymbol.__consonantLookup__ = {
             BorderSymbol.BType.DOUBLE,
             null,
             null,
-            0),
+            0, 0),
     "th": new BorderSymbol("",
             "th",
             BorderSymbol.CType.ON,
@@ -585,7 +587,7 @@ BorderSymbol.__consonantLookup__ = {
             null,
             null,
             null,
-            0),
+            0, 0),
     "y": new BorderSymbol("",
             "y",
             BorderSymbol.CType.ON,
@@ -593,7 +595,7 @@ BorderSymbol.__consonantLookup__ = {
             null,
             null,
             null,
-            0),
+            0, 0),
     "z": new BorderSymbol("",
             "z",
             BorderSymbol.CType.ON,
@@ -601,7 +603,7 @@ BorderSymbol.__consonantLookup__ = {
             null,
             null,
             null,
-            0),
+            0, 0),
     "ng": new BorderSymbol("",
             "ng",
             BorderSymbol.CType.ON,
@@ -609,7 +611,7 @@ BorderSymbol.__consonantLookup__ = {
             BorderSymbol.BType.TRIPLE,
             null,
             null,
-            0),
+            0, 0),
     "qu": new BorderSymbol("",
             "qu",
             BorderSymbol.CType.ON,
@@ -617,7 +619,7 @@ BorderSymbol.__consonantLookup__ = {
             BorderSymbol.BType.SINGLE,
             null,
             null,
-            0),
+            0, 0),
     "x": new BorderSymbol("",
             "x",
             BorderSymbol.CType.ON,
@@ -625,7 +627,7 @@ BorderSymbol.__consonantLookup__ = {
             BorderSymbol.BType.DOUBLE,
             null,
             null,
-            0)
+            0, 0)
 };
 
 BorderSymbol.__vowelLookup__ = {
@@ -636,7 +638,7 @@ BorderSymbol.__vowelLookup__ = {
                           null,
                           BorderSymbol.VCType.IN,
                           null,
-                          0),
+                          0, 0),
     "e": new BorderSymbol("",
                           "e",
                           null,
@@ -644,7 +646,7 @@ BorderSymbol.__vowelLookup__ = {
                           null,
                           BorderSymbol.VCType.CENTRE,
                           null,
-                          0),
+                          0, 0),
     "i": new BorderSymbol("",
                           "i",
                           null,
@@ -652,7 +654,7 @@ BorderSymbol.__vowelLookup__ = {
                           null,
                           BorderSymbol.VCType.CENTRE,
                           BorderSymbol.VBType.IN,
-                          0),
+                          0, 0),
     "o": new BorderSymbol("",
                           "o",
                           null,
@@ -660,7 +662,7 @@ BorderSymbol.__vowelLookup__ = {
                           null,
                           BorderSymbol.VCType.ON,
                           null,
-                          0),
+                          0, 0),
     "u": new BorderSymbol("",
                           "u",
                           null,
@@ -668,5 +670,5 @@ BorderSymbol.__vowelLookup__ = {
                           null,
                           BorderSymbol.VCType.CENTRE,
                           BorderSymbol.VBType.OUT,
-                          0)
+                          0, 0)
 };

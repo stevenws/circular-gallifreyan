@@ -11,59 +11,69 @@ Input = {
                c == "i" ||
                c == "o" ||
                c == "u";
-    }
-}
+    },
+    wordGap:  20
+};
 
 String.prototype.toCGString = function()
 {
-    var cs = [];
-    var str = this.toLowerCase();
+    var str      = this.toLowerCase();
+    var words    = str.split(" ");
+    var syms     = [];
+    var newWords = {};
 
-    for (var i = 0; i < str.length; i++)
+    var counts   = [];
+
+    for (var i = 0; i < words.length; i++)
     {
-        var l = str.charAt(i);
-        if (Input.isVowel(l))
+        while (i < words.length && !words[i])
         {
-            cs.push(BorderSymbol.create(null, l, 0));
-            continue;
+            words.splice(i, 1);
         }
-
-        var n = str.charAt(i+1);
-        if      (l == "c" && n == "h")
-        {
-            i++;
-            l = "ch";
-        }
-        else if (l == "s" && n == "h")
-        {
-            i++;
-            l = "sh";
-        }
-        else if (l == "t" && n == "h")
-        {
-            i++;
-            l = "th";
-        }
-        else if (l == "n" && n == "g")
-        {
-            i++;
-            l = "ng";
-        }
-        else if (l == "q" && n == "u")
-        {
-            i++;
-            l = "qu";
-        }
-
-        var v = null;
-        if (Input.isVowel(str.charAt(i+1)))
-        {
-            i++;
-            v = str.charAt(i);
-        }
-
-        cs.push(BorderSymbol.create(l, v, 0));
     }
 
-    return cs;
+    for (var i = 0, c = 0, cCount = 1, cycle = 0;
+         i < words.length;
+         i++, c++)
+    {
+        if (c >= cCount)
+        {
+            counts.push(cCount);
+            cycle++;
+            c = 0;
+            cCount = Math.round(Math.PI / Math.asin(1/2/cycle));
+            console.log(cCount);
+        }
+    }
+    counts.push(c);
+
+    var canvas     = Drawer.getCanvas();
+    var wordRadius = (Math.min(canvas.width, canvas.height) /
+                      (2*counts.length-1) - Input.wordGap) / 2;
+    var wordDist   = 2 * wordRadius + Input.wordGap;
+
+    for (var i = words.length - 1, c = 0, cycle = 0, r = 0;
+         i >= 0;
+         i--, c--)
+    {
+        if (c < 0)
+        {
+            cycle++;
+            c = counts[cycle] - 1;
+        }
+
+        var wordPos    = 0.5 * Math.PI - 2 * Math.PI * c / counts[cycle];
+        var wordCentre = {x: cycle * wordDist * Math.cos(wordPos) +
+                             canvas.width/2,
+                          y: cycle * wordDist * Math.sin(wordPos) +
+                             canvas.height/2};
+
+        var word = words[i];
+        var sym = new WordSymbol(word, wordRadius, wordCentre);
+
+        syms.push(sym);
+    }
+
+    Input.curWords = newWords;
+    return syms
 }
