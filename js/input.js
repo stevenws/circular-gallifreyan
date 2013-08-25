@@ -12,7 +12,7 @@ Input = {
                c == "o" ||
                c == "u";
     },
-    wordGap:  0.27
+    wordGap:  0.8
 };
 
 String.prototype.toCGString = function()

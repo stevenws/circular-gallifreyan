@@ -5,6 +5,8 @@
         <script type="text/javascript" src="js/input.js"></script>
         <script type="text/javascript" src="js/border-symbol.js"></script>
         <script type="text/javascript" src="js/word-symbol.js"></script>
+        <script type="text/javascript" src="js/canvas-setup.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/layout.css">
     </head>
 
     <body>
@@ -12,7 +14,8 @@
         </canvas>
 
         <form name="input">
-            <input type="textbox" name="word" onkeyup="Input.changeHandler()" />
+            <input type="textbox"
+                   name="word" onkeyup="Input.changeHandler()" />
         </form>
     </body>
 </html>
