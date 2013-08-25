@@ -42,7 +42,6 @@ String.prototype.toCGString = function()
             cycle++;
             c = 0;
             cCount = Math.round(Math.PI / Math.asin(1/2/cycle));
-            console.log(cCount);
         }
     }
     counts.push(c);
