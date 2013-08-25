@@ -309,6 +309,15 @@ BorderSymbol.prototype.draw = function(context,
     switch (vb)
     {
         case BorderSymbol.VBType.IN:
+            /* Stop lines overrunning when connecting "i" to something
+             * next to it.
+             */
+            if (this.getCType() === null &&
+                this.barAngles.length > 0)
+            {
+                break;
+            }
+
             var a;
             if (this.barAngles.length > 0)
             {
